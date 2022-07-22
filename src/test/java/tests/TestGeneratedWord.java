@@ -1,40 +1,34 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import heart.Heart;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import pages.DictionaryPage;
 
-import java.time.Duration;
+public class TestGeneratedWord extends Heart {
 
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestGeneratedWord {
-
-    private WebDriver driver;
-
-    @BeforeEach
-    public void setUp(){
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        driver.get("https://www.merriam-webster.com/");
-        driver.manage().window().maximize();
-    }
-
-//    @AfterEach
-//    public void tearDown(){
-//        driver.quit();
-//    }
 
     @Test
     public void searchRandomWord(){
-        DictionaryPage dictionaryPage = new DictionaryPage(driver);
-        String word = dictionaryPage.randomString();
-        System.out.println(word);
-        dictionaryPage.searchGeneratedString(word);
-        System.out.println(dictionaryPage.checkFailedText());
+        boolean aRealWord;
+        String word;
+        String definitionArea;
+        do {
+            application.wordCheckingPage.loadWordCheckingPage();
+            word = application.wordCheckingPage.randomString();
+            System.out.println(word);
+            application.wordCheckingPage.searchGeneratedString(word);
+            aRealWord = application.wordCheckingPage.checkFailedText();
+            definitionArea = application.wordCheckingPage.getDefinitionArea();
+            application.wordCheckingPage.goBack();
+        }while (aRealWord);
+        System.out.println("\n\nCongratulations! '" + word + "' is a word!\n" + definitionArea);
     }
 
+    @Test
+    public void printDefinitionTest(){
+    application.wordCheckingPage.loadWordCheckingPage();
+    application.wordCheckingPage.searchGeneratedString("Yes");
+        System.out.println(application.wordCheckingPage.getDefinitionArea());;
+    }
 }
+
+
